@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iPhone Modelleri</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(180deg, #000 0%, #1a1a1a 100%);
+            color: #fff;
+            line-height: 1.6;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 1;
+            transition: opacity 0.5s ease-out;
+        }
+
+        #loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            border-top-color: #007aff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        header {
+            background: linear-gradient(180deg, #111 0%, #000 100%);
+            text-align: center;
+            padding: 3rem 1rem;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            color: #aaa;
+            animation: fadeInUp 1s ease-out 0.2s;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        section {
+            margin: 2.5rem 0;
+            padding: 2rem;
+            background: linear-gradient(145deg, #1a1a1a, #222);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 0 10px rgba(255, 255, 255, 0.05);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease, box-shadow 0.3s ease;
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        section:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 122, 255, 0.2);
+        }
+
+        .model {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 2rem;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .model img {
+            width: 200px;
+            height: auto;
+            border-radius: 16px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+            object-fit: cover;
+        }
+
+        .model img:hover {
+            transform: scale(1.1) rotate(3deg);
+        }
+
+        .model-details h2 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            margin-bottom: 0.7rem;
+            color: #007aff;
+            transition: color 0.3s ease;
+        }
+
+        .model-details h2:hover {
+            color: #00c853;
+        }
+
+        .model-details p {
+            font-size: 1.1rem;
+            color: #ddd;
+            margin-bottom: 0.7rem;
+        }
+
+        .model-details ul {
+            list-style: none;
+            margin: 1.2rem 0;
+        }
+
+        .model-details ul li {
+            font-size: 1rem;
+            color: #eee;
+            margin: 0.7rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .model-details ul li::before {
+            content: '✦';
+            color: #007aff;
+            position: absolute;
+            left: 0;
+        }
+
+        .sub-model {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 16px;
+            transition: background 0.3s ease;
+        }
+
+        .sub-model:hover {
+            background: rgba(0, 122, 255, 0.1);
+        }
+
+        .sub-model h3 {
+            font-size: 1.5rem;
+            color: #00c853;
+            margin-bottom: 0.7rem;
+        }
+
+        .sub-model img {
+            width: 150px;
+            border-radius: 12px;
+            margin-bottom: 0.7rem;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        #back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #007aff;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease, background 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(180deg, #000 0%, #1a1a1a 100%);
+            color: #fff;
+            line-height: 1.6;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 1;
+            transition: opacity 0.5s ease-out;
+        }
+
+        #loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            border-top-color: #007aff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        header {
+            background: linear-gradient(180deg, #111 0%, #000 100%);
+            text-align: center;
+            padding: 3rem 1rem;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            color: #aaa;
+            animation: fadeInUp 1s ease-out 0.2s;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        section {
+            margin: 2.5rem 0;
+            padding: 2rem;
+            background: linear-gradient(145deg, #1a1a1a, #222);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 0 10px rgba(255, 255, 255, 0.05);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease, box-shadow 0.3s ease;
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        section:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 122, 255, 0.2);
+        }
+
+        .model {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 2rem;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .model img {
+            width: 200px;
+            height: auto;
+            border-radius: 16px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+            object-fit: cover;
+        }
+
+        .model img:hover {
+            transform: scale(1.1) rotate(3deg);
+        }
+
+        .model-details h2 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            margin-bottom: 0.7rem;
+            color: #007aff;
+            transition: color 0.3s ease;
+        }
+
+        .model-details h2:hover {
+            color: #00c853;
+        }
+
+        .model-details p {
+            font-size: 1.1rem;
+            color: #ddd;
+            margin-bottom: 0.7rem;
+        }
+
+        .model-details ul {
+            list-style: none;
+            margin: 1.2rem 0;
+        }
+
+        .model-details ul li {
+            font-size: 1rem;
+            color: #eee;
+            margin: 0.7rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .model-details ul li::before {
+            content: '✦';
+            color: #007aff;
+            position: absolute;
+            left: 0;
+        }
+
+        .sub-model {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 16px;
+            transition: background 0.3s ease;
+        }
+
+        .sub-model:hover {
+            background: rgba(0, 122, 255, 0.1);
+        }
+
+        .sub-model h3 {
+            font-size: 1.5rem;
+            color: #00c853;
+            margin-bottom: 0.7rem;
+        }
+
+        .sub-model img {
+            width: 150px;
+            border-radius: 12px;
+            margin-bottom: 0.7rem;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        #back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #007aff;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease, background 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        #back-to-top.visible {
+            opacity: 1;
+        }
+
+        #back-to-top:hover {
+            transform: scale(1.1);
+            background: #00c853;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            .model {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .model img {
+                margin: 0 auto 1rem;
+                width: 180px;
+            }
+
+            header h1 {
+                font-size: 2.5rem;
+            }
+
+            header p {
+                font-size: 1.1rem;
+            }
+
+            .sub-model img {
+                width: 130px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .container {
+                padding: 0.5rem;
+            }
+
+            section {
+                margin: 1.5rem 0.5rem;
+                padding: 1.5rem;
+            }
+
+            .model-details h2 {
+                font-size: 1.8rem;
+            }
+
+            .model-details p, .model-details ul li {
+                font-size: 0.95rem;
+            }
+
+            .model img {
+                width: 150px;
+            }
+
+            .sub-model img {
+                width: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div id="loader">
+    <div class="spinner"></div>
+</div>
+
+<header>
+    <h1>iPhone Modelleri</h1>
+    <p>iPhone 11 dan iPhone 17 gacha bo'lgan barcha modellar haqida ma'lumot</p>
+</header>
+
+<div class="container">
+
+    <section>
+        <div class="model">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4xLu5x0Nrf45CjFvDed0g0tL0S_ucrzRsew&s" alt="iPhone 11" loading="lazy">
+            <div class="model-details">
+                <h2>iPhone 11</h2>
+                <p><strong>Narx:</strong> 699 USD</p>
+                <ul>
+                    <li>6.1 inch Liquid Retina HD displey</li>
+                    <li>12 MP ikki kamerali tizim</li>
+                    <li>A13 Bionic chipi</li>
+                    <li>5G qo'llab-quvvatlanmaydi</li>
+                </ul>
+                <div class="sub-model">
+                    <h3>Pro Versiyasi</h3>
+                    <img src="https://www.apple.com/newsroom/images/product/iphone/standard/Apple_iPhone-11-Pro_Colors_091019_big.jpg.large.jpg" alt="iPhone 11 Pro" loading="lazy">
+                    <p><strong>Narx:</strong> 999 USD</p>
+                    <ul>
+                        <li>5.8 inch Super Retina XDR displey</li>
+                        <li>12 MP uchta kamerali tizim</li>
+                        <li>A13 Bionic chipi</li>
+                        <li>5G qo'llab-quvvatlanmaydi</li>
+                    </ul>
+                </div>
+                <div class="sub-model">
+                    <h3>Pro Max Versiyasi</h3>
+                    <img src="https://mini-io-api.texnomart.uz/catalog/product/837/83771/162695/8501555b-73e9-4ed8-a266-923b64dbd21b.jpg" alt="iPhone 11 Pro Max" loading="lazy">
+                    <p><strong>Narx:</strong> 1,099 USD</p>
+                    <ul>
+                        <li>6.5 inch Super Retina XDR displey</li>
+                        <li>12 MP uchta kamerali tizim</li>
+                        <li>A13 Bionic chipi</li>
+                        <li>5G qo'llab-quvvatlanmaydi</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section>
+        <div class="model">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-wU-6X1yS472jm_4ccwSIF60JUdtVQStlsg&s" alt="iPhone 12" loading="lazy">
+            <div class="model-details">
+                <h2>iPhone 12</h2>
+                <p><strong>Narx:</strong> 799 USD</p>
+                <ul>
+                    <li>6.1 inch Super Retina XDR displey</li>
+                    <li>12 MP ikki kamerali tizim</li>
+                    <li>A14 Bionic chipi</li>
+                    <li>5G qo'llab-quvvatlash</li>
+                </ul>
+                <div class="sub-model">
+                    <h3>Pro Versiyasi</h3>
+                    <img src="https://macbro.uz/cdn/shop/files/2_01028290-037c-4efa-a7c9-2a8b8295144c.png?v=1700144808" alt="iPhone 12 Pro" loading="lazy">
+                    <p><strong>Narx:</strong> 999 USD</p>
+                    <ul>
+                        <li>6.1 inch Super Retina XDR displey</li>
+                        <li>12 MP uchta kamerali tizim</li>
+                        <li>A14 Bionic chipi</li>
+                        <li>5G qo'llab-quvvatlash</li>
+                    </ul>
+                </div>
+                <div class="sub-model">
+                    <h3>Pro Max Versiyasi</h3>
+                    <img src="https://www.apple.com/newsroom/images/product/iphone/standard/Apple_announce-iphone12pro_10132020_big.jpg.large.jpg" alt="iPhone 12 Pro Max" loading="lazy">
+                    <p><strong>Narx:</strong> 1,099 USD</p>
+                    <ul>
+                        <li>6.7 inch Super Retina XDR displey</li>
+                        <li>12 MP uchta kamerali tizim</li>
+                        <li>A14 Bionic chipi</li>
+                        <li>5G qo'llab-quvvatlash</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section>
+        <div class="model">
+            <img src="https://media.istockphoto.com/id/1341551474/ru/%D1%84%D0%BE%D1%82%D0%BE/%D0%BD%D0%B5%D0%B4%D0%B0%D0%B2%D0%BD%D0%BE-%D0%B2%D1%8B%D0%BF%D1%83%D1%89%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9-%D0%BC%D0%B0%D0%BA%D0%B5%D1%82-iphone-13-starlight-color-%D1%81-%D0%B7%D0%B0%D0%B4%D0%BD%D0%B8%D0%BC-%D0%B8-%D0%BF%D0%B5%D1%80%D0%B5%D0%B4%D0%BD%D0%B8%D0%BC-%D1%83%D0%B3%D0%BB%D0%B0%D0%BC%D0%B8.jpg?s=612x612&w=0&k=20&c=TJjUu-HLqd3JA8o-X-FdvkzDORMrvtQ5kusX2jIZVsE=" alt="iPhone 13" loading="lazy">
+            <div class="model-details">
+                <h2>iPhone 13</h2>
+                <p><strong>Narx:</strong> 799 USD</p>
+                <ul>
+                    <li>6.1 inch Super Retina XDR displey</li>
+                    <li>12 MP ikki kamerali tizim (Sensor-shift OIS)</li>
+                    <li>A15 Bionic chipi</li>
+                    <li>5G qo'llab-quvvatlanadi</li>
+                </ul>
+                <div class="sub-model">
+                    <h3>Pro Versiyasi</h3>
+                    <img src="https://cdsassets.apple.com/live/SZLF0YNV/images/sp/111871_iphone13-pro-colors-480.png" alt="iPhone 13 Pro" loading="lazy">
+                    <p><strong>Narx:</strong> 999 USD</p>
+                    <ul>
+                        <li>6.1 inch Super Retina XDR ProMotion displey</li>
+                        <li>12 MP uchta kamerali tizim</li>
+                        <li>A15 Bionic chipi</li>
+                        <li>5G qo'llab-quvvatlanadi</li>
+                    </ul>
+                </div>
+                <div class="sub-model">
+                    <h3>Pro Max Versiyasi</h3>
+                    <img src="https://spb-apple.ru/image/cache/catalog/Add/13promaxpro/30059054bb-700x700.jpg" alt="iPhone 13 Pro Max" loading="lazy">
+                    <p><strong>Narx:</strong> 1,099 USD</p>
+                    <ul>
+                        <li>6.7 inch Super Retina XDR ProMotion displey</li>
+                        <li>12 MP uchta kamerali tizim</li>
+                        <li>A15 Bionic chipi</li>
+                        <li>5G qo'llab-quvvatlanadi</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section>
+        <div class="model">
+            <img src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-14-finish-select-202209-6-1inch-blue?wid=5120&hei=2880&fmt=png-alpha&.v=1661026434593" alt="iPhone 14" loading="lazy">
+            <div class="model-details">
+                <h2>iPhone 14</h2>
+                <p><strong>Narx:</strong> 799 USD</p>
+                <ul>
+                    <li>6.1 inch Super Retina XDR displey</li>
+                    <li>12 MP ikki kamerali tizim</li>
+                    <li>A15 Bionic chipi</li>
+                    <li>5G qo'llab-quvvatlash</li>
+                </ul>
+                <div class="sub-model">
+                    <h3>Pro Versiyasi</h3>
+                    <img src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-14-pro-finish-select-202209-6-1inch-deeppurple?wid=5120&hei=2880&fmt=png-alpha&.v=1663790481040" alt="iPhone 14 Pro" loading="lazy">
+                    <p><strong>Narx:</strong> 999 USD</p>
+                    <ul>
+                        <li>6.1 inch Super Retina XDR ProMotion displey</li>
+                        <li>48 MP uchta kamerali tizim</li>
+                        <li>A16 Bionic chipi</li>
+                        <li>5G qo'llab-quvvatlanadi</li>
+                    </ul>
+                </div>
+                <div class="sub-model">
+                    <h3>Pro Max Versiyasi</h3>
+                    <img src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-14-pro-finish-select-202209-6-7inch-spaceblack?wid=5120&hei=2880&fmt=png-alpha&.v=1663790481040" alt="iPhone 14 Pro Max" loading="lazy">
+                    <p><strong>Narx:</strong> 1,099 USD</p>
+                    <ul>
+                        <li>6.7 inch Super Retina XDR ProMotion displey</li>
+                        <li>48 MP uchta kamerali tizim</li>
+                        <li>A16 Bionic chipi</li>
+                        <li>5G qo'llab-quvvatlanadi</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="model">
+            <img src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-finish-select-202309-6-1inch-blue?wid=5120&hei=2880&fmt=png-alpha&.v=1693011677508" alt="iPhone 15" loading="lazy">
+            <div class="model-details">
+                <h2>iPhone 15</h2>
+                <p><strong>Narx:</strong> 799 USD</p>
+                <ul>
+                    <li>6.1 inch Super Retina XDR displey</li>
+                    <li>48 MP ikki kamerali tizim</li>
+                    <li>A16 Bionic chipi</li>
+                    <li>5G qo'llab-quvvatlash</li>
+                    <li>USB-C porti</li>
+                </ul>
+                <div class="sub-model">
+                    <h3>Pro Versiyasi</h3>
+                    <img src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-pro-finish-select-202309-6-1inch-blacktitanium?wid=5120&hei=2880&fmt=png-alpha&.v=1693011677508" alt="iPhone 15 Pro" loading="lazy">
+                    <p><strong>Narx:</strong> 999 USD</p>
+                    <ul>
+                        <li>6.1 inch Super Retina XDR ProMotion displey</li>
+                        <li>48 MP uchta kamerali tizim</li>
+                        <li>A17 Pro chipi</li>
+                        <li>5G qo'llab-quvvatlash</li>
+                        <li>USB-C porti</li>
+                    </ul>
+                </div>
+                <div class="sub-model">
+                    <h3>Pro Max Versiyasi</h3>
+                    <img src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-pro-finish-select-202309-6-7inch-whitetitanium?wid=5120&hei=2880&fmt=png-alpha&.v=1693011677508" alt="iPhone 15 Pro Max" loading="lazy">
+                    <p><strong>Narx:</strong> 1,199 USD</p>
+                    <ul>
+                        <li>6.7 inch Super Retina XDR ProMotion displey</li>
+                        <li>48 MP uchta kamerali tizim</li>
+                        <li>A17 Pro chipi</li>
+                        <li>5G qo'llab-quvvatlash</li>
+                        <li>USB-C porti</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section>
+        <div class="model">
+            <img src="https://twigo.ru/center/iblock/900/lkuzbkxywkoydphgw2jya5p8q816351x/iphone_16_128_gb_ultramarin.jpg" alt="iPhone 16" loading="lazy">
+            <div class="model-details">
+                <h2>iPhone 16</h2>
+                <p><strong>Narx:</strong> 799 USD</p>
+                <ul>
+                    <li>6.1 inch Super Retina XDR displey</li>
+                    <li>48 MP ikki kamerali tizim</li>
+                    <li>A18 Bionic chipi</li>
+                    <li>5G qo'llab-quvvatlash</li>
+                    <li>USB-C porti</li>
+                </ul>
+                <div class="sub-model">
+                    <h3>Pro Versiyasi</h3>
+                    <img src="https://i-center.by/images/o/apple-iphone-16-pro-128gb-belyj-titan_1.jpg" alt="iPhone 16 Pro" loading="lazy">
+                    <p><strong>Narx:</strong> 999 USD</p>
+                    <ul>
+                        <li>6.3 inch Super Retina XDR ProMotion displey</li>
+                        <li>48 MP uchta kamerali tizim</li>
+                        <li>A18 Pro chipi</li>
+                        <li>5G qo'llab-quvvatlash</li>
+                        <li>USB-C porti</li>
+                    </ul>
+                </div>
+                <div class="sub-model">
+                    <h3>Pro Max Versiyasi</h3>
+                    <img src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-16-pro-finish-select-202409-6-9inch-deserttitanium?wid=5120&hei=2880&fmt=png-alpha&.v=1723687725377" alt="iPhone 16 Pro Max" loading="lazy">
+                    <p><strong>Narx:</strong> 1,199 USD</p>
+                    <ul>
+                        <li>6.9 inch Super Retina XDR ProMotion displey</li>
+                        <li>48 MP uchta kamerali tizim</li>
+                        <li>A18 Pro chipi</li>
+                        <li>5G qo'llab-quvvatlash</li>
+                        <li>USB-C porti</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section>
+        <div class="model">
+            <img src="https://cdn.mediapark.uz/imgs/cde2c69d-9d65-4867-a395-3460e101174b_iPhone_17_Sage_PDP_Image_Position_1__ce-WW.webp" alt="iPhone 17" loading="lazy">
+            <div class="model-details">
+                <h2>iPhone 17</h2>
+                <p><strong>Narx:</strong> 799 USD</p>
+                <ul>
+                    <li>6.1 inch Super Retina XDR displey</li>
+                    <li>48 MP ikki kamerali tizim</li>
+                    <li>A18 Bionic chipi</li>
+                    <li>5G qo'llab-quvvatlash</li>
+                    <li>USB-C porti</li>
+                </ul>
+                <div class="sub-model">
+                    <h3>Pro Versiyasi</h3>
+                    <img src="https://minapi.beemarket.uz/prod-media/productImages/1758174879GveuTBHoNMIO.webp" alt="iPhone 17 Pro" loading="lazy">
+                    <p><strong>Narx:</strong> 999 USD</p>
+                    <ul>
+                        <li>6.3 inch Super Retina XDR ProMotion displey</li>
+                        <li>48 MP uchta kamerali tizim</li>
+                        <li>A18 Pro chipi</li>
+                        <li>5G qo'llab-quvvatlash</li>
+                        <li>USB-C porti</li>
+                    </ul>
+                </div>
+                <div class="sub-model">
+                    <h3>Pro Max Versiyasi</h3>
+                    <img src="https://fdn2.gsmarena.com/vv/pics/apple/apple-iphone-17-pro-max-nano-sim.jpg" alt="iPhone 17 Pro Max" loading="lazy">
+                    <p><strong>Narx:</strong> 1,199 USD</p>
+                    <ul>
+                        <li>6.9 inch Super Retina XDR ProMotion displey</li>
+                        <li>48 MP uchta kamerali tizim</li>
+                        <li>A18 Pro chipi</li>
+                        <li>5G qo'llab-quvvatlash</li>
+                        <li>USB-C porti</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<button id="back-to-top" title="Yuqoriga qaytish">↑</button>
+
+<script>
+
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            document.getElementById('loader').classList.add('hidden');
+        }, 500);
+    });
+
+
+    const sections = document.querySelectorAll('section');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    sections.forEach(section => observer.observe(section));
+
+    const backToTop = document.getElementById('back-to-top');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+            backToTop.classList.add('visible');
+        } else {
+            backToTop.classList.remove('visible');
+        }
+    });
+
+    backToTop.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+</script>
+</body>
+</html>
